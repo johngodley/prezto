@@ -11,3 +11,78 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
 fi
 
 # Customize to your needs...
+# move to env, check machine
+export PATH=$PATH:/bin/:/users/john/Library/Scripts/:/opt/local/bin:/opt/local/sbin:/Applications/MAMP/bin/php5/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+export PATH=$PATH:/Applications/Android\ Studio.app/sdk/tools:/Applications/Android\ Studio.app/sdk/platform-tools/
+
+bindkey -e
+bindkey '[C' forward-word
+bindkey '[D' backward-word
+bindkey '[B' beginning-of-line
+bindkey '[A' end-of-line
+
+# check this
+source /Users/john/.iterm2_shell_integration.zsh
+
+iterm2_print_user_vars() {
+  iterm2_set_user_var gitBranch $((git branch 2> /dev/null) | grep \* | cut -c3-)
+}
+
+bindkey -M vicmd "/" history-incremental-search-backward
+bindkey -M vicmd "?" history-incremental-search-forward
+
+# Search based on what you typed in already
+bindkey -M vicmd "//" history-beginning-search-backward
+bindkey -M vicmd "??" history-beginning-search-forward
+
+bindkey "\eOP" run-help
+
+# oh wow!  This is killer...  try it!
+bindkey -M vicmd "q" push-line
+
+# it's like, space AND completion.  Gnarlbot.
+bindkey -M viins ' ' magic-space
+
+eval "$(fasd --init auto)"
+
+alias proxy='ssh -D 8080 -C -N allnoodles@proxy.automattic.com -i ~/.ssh/a8c/id_rsa'
+alias proxysvn='sudo ssh -N allnoodles@proxy.automattic.com -L 443:192.0.65.249:443'
+
+update() {
+    local brew="brew update; brew upgrade;"
+    local gem="gem update;"
+    local pip="pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U -q"
+    sh -c $brew$gisty; sudo sh -c $gem$pip
+}
+
+# Colours in man pages
+man() {
+    env \
+    LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+    LESS_TERMCAP_md=$(printf "\e[1;31m") \
+    LESS_TERMCAP_me=$(printf "\e[0m") \
+    LESS_TERMCAP_se=$(printf "\e[0m") \
+    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+    LESS_TERMCAP_ue=$(printf "\e[0m") \
+    LESS_TERMCAP_us=$(printf "\e[1;32m") \
+    man "$@"
+}
+
+# test
+test -e ~/.dircolors && eval `gdircolors -b ~/.dircolors`
+unalias gls
+alias ls='gls --color=auto'
+alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+
+setopt HIST_IGNORE_SPACE
+setopt no_share_history
+
+
+export NVM_DIR="/Users/john/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+setopt clobber
+
+
+# tabtab source for yarn package
+# uninstall by removing these lines or running `tabtab uninstall yarn`
+[[ -f /Users/john/.nvm/versions/node/v6.9.1/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh ]] && . /Users/john/.nvm/versions/node/v6.9.1/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh
